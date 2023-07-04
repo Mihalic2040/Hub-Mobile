@@ -1,5 +1,13 @@
 build_core:
-	cd ./core/Hub && gomobile bind -target android -androidapi 31 -o ../../android/app/libs/hub.aar github.com/Mihalic2040/Hub
+	GO111MODULE=on gomobile bind -target android -androidapi 31 -o ./android/app/libs/deamon.aar github.com/Mihalic2040/Hub-Mobile
 
 init:
-	cd ./core/Hub && gomobile init
+	gomobile init
+
+test:
+	cd examples && go run main.go
+
+grpc:
+	protoc --go_out=. --go_opt=paths=source_relative \
+    --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+    protocols/*

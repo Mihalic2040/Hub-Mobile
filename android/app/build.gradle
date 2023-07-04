@@ -29,8 +29,8 @@ android {
 }
 
 dependencies {
-    implementation files('./libs/hub.aar')
-    implementation files('./libs/hub-sources.jar')
+    implementation files('./libs/deamon.aar')
+    implementation files('./libs/deamon-sources.jar')
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.5.0'
