@@ -1,15 +1,19 @@
 syntax = "proto3";
 
+// Golang
 option go_package = "github.com/Mihalic2040/Hub-Mobile/protocols";
 
-service MyService {
-  rpc SayHello (HelloRequest) returns (HelloResponse);
+// Java
+
+option java_multiple_files = true;
+option java_package = "com.Bridge.protocols";
+option java_outer_classname = "Bridge";
+
+service Peers {
+  rpc SayHello (PeersResponse) returns (PeersResponse);
 }
 
-message HelloRequest {
-  string name = 1;
-}
 
-message HelloResponse {
-  string message = 1;
+message PeersResponse {
+  string peers = 1;
 }

@@ -19,89 +19,89 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	MyService_SayHello_FullMethodName = "/MyService/SayHello"
+	Peers_SayHello_FullMethodName = "/Peers/SayHello"
 )
 
-// MyServiceClient is the client API for MyService service.
+// PeersClient is the client API for Peers service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type MyServiceClient interface {
-	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloResponse, error)
+type PeersClient interface {
+	SayHello(ctx context.Context, in *PeersResponse, opts ...grpc.CallOption) (*PeersResponse, error)
 }
 
-type myServiceClient struct {
+type peersClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewMyServiceClient(cc grpc.ClientConnInterface) MyServiceClient {
-	return &myServiceClient{cc}
+func NewPeersClient(cc grpc.ClientConnInterface) PeersClient {
+	return &peersClient{cc}
 }
 
-func (c *myServiceClient) SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloResponse, error) {
-	out := new(HelloResponse)
-	err := c.cc.Invoke(ctx, MyService_SayHello_FullMethodName, in, out, opts...)
+func (c *peersClient) SayHello(ctx context.Context, in *PeersResponse, opts ...grpc.CallOption) (*PeersResponse, error) {
+	out := new(PeersResponse)
+	err := c.cc.Invoke(ctx, Peers_SayHello_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// MyServiceServer is the server API for MyService service.
-// All implementations must embed UnimplementedMyServiceServer
+// PeersServer is the server API for Peers service.
+// All implementations must embed UnimplementedPeersServer
 // for forward compatibility
-type MyServiceServer interface {
-	SayHello(context.Context, *HelloRequest) (*HelloResponse, error)
-	mustEmbedUnimplementedMyServiceServer()
+type PeersServer interface {
+	SayHello(context.Context, *PeersResponse) (*PeersResponse, error)
+	mustEmbedUnimplementedPeersServer()
 }
 
-// UnimplementedMyServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedMyServiceServer struct {
+// UnimplementedPeersServer must be embedded to have forward compatible implementations.
+type UnimplementedPeersServer struct {
 }
 
-func (UnimplementedMyServiceServer) SayHello(context.Context, *HelloRequest) (*HelloResponse, error) {
+func (UnimplementedPeersServer) SayHello(context.Context, *PeersResponse) (*PeersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SayHello not implemented")
 }
-func (UnimplementedMyServiceServer) mustEmbedUnimplementedMyServiceServer() {}
+func (UnimplementedPeersServer) mustEmbedUnimplementedPeersServer() {}
 
-// UnsafeMyServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to MyServiceServer will
+// UnsafePeersServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to PeersServer will
 // result in compilation errors.
-type UnsafeMyServiceServer interface {
-	mustEmbedUnimplementedMyServiceServer()
+type UnsafePeersServer interface {
+	mustEmbedUnimplementedPeersServer()
 }
 
-func RegisterMyServiceServer(s grpc.ServiceRegistrar, srv MyServiceServer) {
-	s.RegisterService(&MyService_ServiceDesc, srv)
+func RegisterPeersServer(s grpc.ServiceRegistrar, srv PeersServer) {
+	s.RegisterService(&Peers_ServiceDesc, srv)
 }
 
-func _MyService_SayHello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HelloRequest)
+func _Peers_SayHello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PeersResponse)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MyServiceServer).SayHello(ctx, in)
+		return srv.(PeersServer).SayHello(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MyService_SayHello_FullMethodName,
+		FullMethod: Peers_SayHello_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyServiceServer).SayHello(ctx, req.(*HelloRequest))
+		return srv.(PeersServer).SayHello(ctx, req.(*PeersResponse))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// MyService_ServiceDesc is the grpc.ServiceDesc for MyService service.
+// Peers_ServiceDesc is the grpc.ServiceDesc for Peers service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var MyService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "MyService",
-	HandlerType: (*MyServiceServer)(nil),
+var Peers_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "Peers",
+	HandlerType: (*PeersServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "SayHello",
-			Handler:    _MyService_SayHello_Handler,
+			Handler:    _Peers_SayHello_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

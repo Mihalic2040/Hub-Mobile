@@ -10,4 +10,7 @@ test:
 grpc:
 	protoc --go_out=. --go_opt=paths=source_relative \
     --go-grpc_out=. --go-grpc_opt=paths=source_relative \
-    protocols/*
+    protocols/bridge.proto
+
+
+	protoc --java_out=lite:android/app/src/main/java --grpc-java_out=lite:android/app/src/main/java protocols/bridge.proto

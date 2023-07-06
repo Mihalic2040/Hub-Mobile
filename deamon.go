@@ -13,16 +13,18 @@ import (
 )
 
 type Server struct {
-	protocols.UnimplementedMyServiceServer
+	protocols.UnimplementedPeersServer
 }
 
 type Service struct {
 	hub.App
 }
 
-func (s *Server) SayHello(ctx context.Context, req *protocols.HelloRequest) (*protocols.HelloResponse, error) {
+var app hub.App
+
+func (s *Server) SayHello(ctx context.Context, req *protocols.PeersResponse) (*protocols.PeersResponse, error) {
 	// Implement the logic to handle the gRPC request and return a response
-	return &protocols.HelloResponse{Message: "Hello, " + req.Name + "!"}, nil
+	return &protocols.PeersResponse{Peers: app.Host.Peerstore().Peers().String()}, nil
 }
 
 func (s *Service) Start() {
@@ -34,7 +36,7 @@ func (s *Service) Start() {
 	myServer := &Server{}
 
 	// Register your gRPC service implementation
-	protocols.RegisterMyServiceServer(server, myServer)
+	protocols.RegisterPeersServer(server, myServer)
 
 	// Create a listener for your chosen network protocol
 	lis, err := net.Listen("tcp", ":4545")
@@ -42,6 +44,7 @@ func (s *Service) Start() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
+	app = s.App
 	// Start the gRPC server
 	go func() {
 		if err := server.Serve(lis); err != nil {
@@ -64,30 +67,4 @@ func (s *Service) Config(jsonStr string) {
 	// Set the deserialized Config in the App struct
 	s.App.Settings(config)
 
-}
-
-func (s *Service) Test() {
-	// Set up a connection to the gRPC server
-	conn, err := grpc.Dial("localhost:4545", grpc.WithInsecure())
-	if err != nil {
-		log.Fatalf("failed to connect: %v", err)
-	}
-	defer conn.Close()
-
-	// Create a gRPC client
-	client := protocols.NewMyServiceClient(conn)
-
-	// Prepare the request
-	req := &protocols.HelloRequest{
-		Name: "John",
-	}
-
-	// Send the gRPC request
-	resp, err := client.SayHello(context.Background(), req)
-	if err != nil {
-		log.Fatalf("failed to send request: %v", err)
-	}
-
-	// Process the response
-	log.Printf("Response: %s", resp.Message)
 }
