@@ -17,16 +17,18 @@ import androidx.core.app.NotificationCompat;
 import com.Mihalic2040.hub_mobile.MainActivity;
 import com.Mihalic2040.hub_mobile.R;
 
-import io.grpc.ManagedChannel;
-
 public class node extends Service {
     private static final String TAG = "NodeService";
     private static final String CHANNEL_ID = "NodeChannel";
-    public String config = "{\n" +
+    private static final int NOTIFICATION_ID = 1;
+    private static final String NOTIFICATION_TITLE = "Node Service";
+    private static final String NOTIFICATION_TEXT = "Running";
+
+    private String config = "{\n" +
             "    \"Host\": \"0.0.0.0\",\n" +
             "    \"Port\": \"0\",\n" +
+            "    \"Secret\": \"12121\",\n" +
             "    \"Rendezvous\": \"Hub\",\n" +
-            "    \"DHTServer\": true,\n" +
             "    \"ProtocolId\": \"/hub/0.0.1\",\n" +
             "    \"Bootstrap\": \"/ip4/141.145.193.111/tcp/6666/p2p/12D3KooWQd1K1k8XA9xVEzSAu7HUCodC7LJB6uW5Kw4VwkRdstPE\"\n" +
             "}";
@@ -38,13 +40,8 @@ public class node extends Service {
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "Service onCreate");
-        Log.i(TAG, "Service onStartCommand");
-
-        if (!isServiceRunning) {
-            startServiceThread();
-            isServiceRunning = true;
-        }
-
+        createNotificationChannel();
+        startServiceThread();
     }
 
     @Override
@@ -53,19 +50,18 @@ public class node extends Service {
 
         if (!isServiceRunning) {
             startServiceThread();
-            isServiceRunning = true;
         }
 
-        return START_STICKY;
+        // Return START_REDELIVER_INTENT to ensure the service is restarted with the last intent
+        return START_REDELIVER_INTENT;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "Service destroyed");
+        Log.i(TAG, "Service onDestroy");
 
         stopServiceThread();
-        isServiceRunning = false;
     }
 
     @Nullable
@@ -74,14 +70,29 @@ public class node extends Service {
         return null;
     }
 
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Node Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            channel.enableLights(false);
+            channel.enableVibration(false);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
     private void startServiceThread() {
         serviceThread = new Thread(() -> {
             Log.i(TAG, "Service thread started");
+
+            // Additional logic within the service thread
             deamon.Service service = new deamon.Service();
             service.config(config);
             service.start();
-
-            // Your additional logic within the service thread
 
             while (!Thread.currentThread().isInterrupted()) {
                 // Perform any necessary background tasks here
@@ -98,6 +109,11 @@ public class node extends Service {
         });
 
         serviceThread.start();
+
+        // Show a foreground notification
+        Notification notification = buildNotification();
+        startForeground(NOTIFICATION_ID, notification);
+        isServiceRunning = true;
     }
 
     private void stopServiceThread() {
@@ -109,7 +125,23 @@ public class node extends Service {
                 Log.e(TAG, "Failed to stop service thread");
             }
         }
+
+        // Stop the service as foreground and remove the notification
+        stopForeground(true);
+        isServiceRunning = false;
     }
 
+    private Notification buildNotification() {
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle(NOTIFICATION_TITLE)
+                .setContentText(NOTIFICATION_TEXT)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentIntent(pendingIntent)
+                .setOngoing(true);
+
+        return builder.build();
+    }
 }
