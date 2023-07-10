@@ -28,23 +28,23 @@ public final class PeersGrpc {
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<com.Bridge.protocols.PeersResponse,
-      com.Bridge.protocols.PeersResponse> getSayHelloMethod;
+      com.Bridge.protocols.PeersResponse> getPeersMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "SayHello",
+      fullMethodName = SERVICE_NAME + '/' + "Peers",
       requestType = com.Bridge.protocols.PeersResponse.class,
       responseType = com.Bridge.protocols.PeersResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<com.Bridge.protocols.PeersResponse,
-      com.Bridge.protocols.PeersResponse> getSayHelloMethod() {
-    io.grpc.MethodDescriptor<com.Bridge.protocols.PeersResponse, com.Bridge.protocols.PeersResponse> getSayHelloMethod;
-    if ((getSayHelloMethod = PeersGrpc.getSayHelloMethod) == null) {
+      com.Bridge.protocols.PeersResponse> getPeersMethod() {
+    io.grpc.MethodDescriptor<com.Bridge.protocols.PeersResponse, com.Bridge.protocols.PeersResponse> getPeersMethod;
+    if ((getPeersMethod = PeersGrpc.getPeersMethod) == null) {
       synchronized (PeersGrpc.class) {
-        if ((getSayHelloMethod = PeersGrpc.getSayHelloMethod) == null) {
-          PeersGrpc.getSayHelloMethod = getSayHelloMethod =
+        if ((getPeersMethod = PeersGrpc.getPeersMethod) == null) {
+          PeersGrpc.getPeersMethod = getPeersMethod =
               io.grpc.MethodDescriptor.<com.Bridge.protocols.PeersResponse, com.Bridge.protocols.PeersResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "SayHello"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "Peers"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.lite.ProtoLiteUtils.marshaller(
                   com.Bridge.protocols.PeersResponse.getDefaultInstance()))
@@ -54,7 +54,7 @@ public final class PeersGrpc {
         }
       }
     }
-    return getSayHelloMethod;
+    return getPeersMethod;
   }
 
   /**
@@ -107,20 +107,20 @@ public final class PeersGrpc {
 
     /**
      */
-    public void sayHello(com.Bridge.protocols.PeersResponse request,
+    public void peers(com.Bridge.protocols.PeersResponse request,
         io.grpc.stub.StreamObserver<com.Bridge.protocols.PeersResponse> responseObserver) {
-      asyncUnimplementedUnaryCall(getSayHelloMethod(), responseObserver);
+      asyncUnimplementedUnaryCall(getPeersMethod(), responseObserver);
     }
 
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
-            getSayHelloMethod(),
+            getPeersMethod(),
             asyncUnaryCall(
               new MethodHandlers<
                 com.Bridge.protocols.PeersResponse,
                 com.Bridge.protocols.PeersResponse>(
-                  this, METHODID_SAY_HELLO)))
+                  this, METHODID_PEERS)))
           .build();
     }
   }
@@ -141,10 +141,10 @@ public final class PeersGrpc {
 
     /**
      */
-    public void sayHello(com.Bridge.protocols.PeersResponse request,
+    public void peers(com.Bridge.protocols.PeersResponse request,
         io.grpc.stub.StreamObserver<com.Bridge.protocols.PeersResponse> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(getSayHelloMethod(), getCallOptions()), request, responseObserver);
+          getChannel().newCall(getPeersMethod(), getCallOptions()), request, responseObserver);
     }
   }
 
@@ -164,9 +164,9 @@ public final class PeersGrpc {
 
     /**
      */
-    public com.Bridge.protocols.PeersResponse sayHello(com.Bridge.protocols.PeersResponse request) {
+    public com.Bridge.protocols.PeersResponse peers(com.Bridge.protocols.PeersResponse request) {
       return blockingUnaryCall(
-          getChannel(), getSayHelloMethod(), getCallOptions(), request);
+          getChannel(), getPeersMethod(), getCallOptions(), request);
     }
   }
 
@@ -186,14 +186,14 @@ public final class PeersGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<com.Bridge.protocols.PeersResponse> sayHello(
+    public com.google.common.util.concurrent.ListenableFuture<com.Bridge.protocols.PeersResponse> peers(
         com.Bridge.protocols.PeersResponse request) {
       return futureUnaryCall(
-          getChannel().newCall(getSayHelloMethod(), getCallOptions()), request);
+          getChannel().newCall(getPeersMethod(), getCallOptions()), request);
     }
   }
 
-  private static final int METHODID_SAY_HELLO = 0;
+  private static final int METHODID_PEERS = 0;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -212,8 +212,8 @@ public final class PeersGrpc {
     @java.lang.SuppressWarnings("unchecked")
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
-        case METHODID_SAY_HELLO:
-          serviceImpl.sayHello((com.Bridge.protocols.PeersResponse) request,
+        case METHODID_PEERS:
+          serviceImpl.peers((com.Bridge.protocols.PeersResponse) request,
               (io.grpc.stub.StreamObserver<com.Bridge.protocols.PeersResponse>) responseObserver);
           break;
         default:
@@ -241,7 +241,7 @@ public final class PeersGrpc {
         result = serviceDescriptor;
         if (result == null) {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
-              .addMethod(getSayHelloMethod())
+              .addMethod(getPeersMethod())
               .build();
         }
       }

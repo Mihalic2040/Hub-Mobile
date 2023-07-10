@@ -12,31 +12,27 @@ import (
 	"google.golang.org/grpc"
 )
 
-type Server struct {
-	protocols.UnimplementedPeersServer
-}
-
 type Service struct {
-	hub.App
-}
+	App hub.App
 
-var app hub.App
+	grcpServer *grpc.Server
+	// server      *Server
 
-func (s *Server) SayHello(ctx context.Context, req *protocols.PeersResponse) (*protocols.PeersResponse, error) {
-	// Implement the logic to handle the gRPC request and return a response
-	return &protocols.PeersResponse{Peers: app.Host.Peerstore().Peers().String()}, nil
+	//grpc stuff
+	protocols.UnimplementedPeersServer
+	protocols.UnimplementedRequestServiceServer
 }
 
 func (s *Service) Start() {
-	s.App.Start(false)
+	s.App.App = *s.App.Start(false)
 
+	// s.initialize()
 	// Create a gRPC server
-	server := grpc.NewServer()
-
-	myServer := &Server{}
+	s.grcpServer = grpc.NewServer()
 
 	// Register your gRPC service implementation
-	protocols.RegisterPeersServer(server, myServer)
+	protocols.RegisterPeersServer(s.grcpServer, s)
+	protocols.RegisterRequestServiceServer(s.grcpServer, s)
 
 	// Create a listener for your chosen network protocol
 	lis, err := net.Listen("tcp", ":4545")
@@ -44,10 +40,9 @@ func (s *Service) Start() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	app = s.App
 	// Start the gRPC server
 	go func() {
-		if err := server.Serve(lis); err != nil {
+		if err := s.grcpServer.Serve(lis); err != nil {
 			log.Fatalf("failed to serve: %v", err)
 		}
 	}()
@@ -66,5 +61,33 @@ func (s *Service) Config(jsonStr string) {
 
 	// Set the deserialized Config in the App struct
 	s.App.Settings(config)
+}
 
+func (s *Service) RequestTest() {
+
+	r := &protocols.RequestData{
+		Peer:    "12D3KooWGQ4ncdUVMSaVrWrCU1fyM8ZdcVvuWa7MdwqkUu4SSDo4",
+		Handler: "MyHandler",
+		Payload: "request",
+	}
+	// Set up a connection to the gRPC server
+	conn, err := grpc.Dial("localhost"+":"+"4545", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("Failed to connect: %v", err)
+	}
+	defer conn.Close()
+
+	// Create a gRPC client
+	client := protocols.NewRequestServiceClient(conn)
+
+	// Prepare the request
+
+	// Send the gRPC request
+	response, err := client.Request(context.Background(), r)
+	if err != nil {
+		log.Fatalf("Request failed: %v", err)
+	}
+
+	// Process the response
+	log.Println(response)
 }

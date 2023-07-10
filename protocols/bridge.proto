@@ -10,10 +10,29 @@ option java_package = "com.Bridge.protocols";
 option java_outer_classname = "Bridge";
 
 service Peers {
-  rpc SayHello (PeersResponse) returns (PeersResponse);
+  rpc Peers (PeersResponse) returns (PeersResponse);
 }
-
 
 message PeersResponse {
   string peers = 1;
 }
+
+
+service RequestService {
+  rpc Request (RequestData) returns (ResponseData);
+}
+
+message RequestData {
+  string peer = 1;
+  string handler = 2;
+  string user = 3;
+  string payload = 4;
+}
+
+
+message ResponseData {
+  string payload = 1;
+  int64 status = 2;
+}
+
+

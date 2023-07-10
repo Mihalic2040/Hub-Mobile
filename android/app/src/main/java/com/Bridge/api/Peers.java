@@ -1,10 +1,11 @@
 package com.Bridge.api;
 
+import com.Bridge.protocols.PeersGrpc;
+import com.Bridge.protocols.PeersResponse;
+
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
-import com.Bridge.protocols.PeersGrpc;
-import com.Bridge.protocols.PeersResponse;
 
 public class Peers {
     public PeersResponse request() {
@@ -22,7 +23,7 @@ public class Peers {
                     .build();
 
             // Send the gRPC request
-            PeersResponse response = client.sayHello(request);
+            PeersResponse response = client.peers(request);
 
             // Process the response
             System.out.println("Response GRPC: " + response.getPeers());

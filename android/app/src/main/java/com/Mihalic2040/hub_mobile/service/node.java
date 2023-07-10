@@ -5,8 +5,10 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
@@ -16,6 +18,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.Mihalic2040.hub_mobile.MainActivity;
 import com.Mihalic2040.hub_mobile.R;
+
 
 public class node extends Service {
     private static final String TAG = "NodeService";
@@ -85,22 +88,39 @@ public class node extends Service {
         }
     }
 
+    public void acquireMulticastLock() {
+        WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+        WifiManager.MulticastLock multicastLock = wifiManager.createMulticastLock("myMulticastLockTag");
+        multicastLock.acquire();
+    }
+
+    public void releaseMulticastLock() {
+        WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+        WifiManager.MulticastLock multicastLock = wifiManager.createMulticastLock("myMulticastLockTag");
+        multicastLock.release();
+    }
+
     private void startServiceThread() {
         serviceThread = new Thread(() -> {
             Log.i(TAG, "Service thread started");
 
             // Additional logic within the service thread
+            acquireMulticastLock();
             deamon.Service service = new deamon.Service();
             service.config(config);
             service.start();
+
+
 
             while (!Thread.currentThread().isInterrupted()) {
                 // Perform any necessary background tasks here
 
                 try {
                     Thread.sleep(1000); // Adjust the sleep interval as needed
+                    service.requestTest();
                 } catch (InterruptedException e) {
                     Log.e(TAG, "Service thread interrupted");
+                    releaseMulticastLock();
                     Thread.currentThread().interrupt();
                 }
             }

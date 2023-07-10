@@ -19,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Peers_SayHello_FullMethodName = "/Peers/SayHello"
+	Peers_Peers_FullMethodName = "/Peers/Peers"
 )
 
 // PeersClient is the client API for Peers service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PeersClient interface {
-	SayHello(ctx context.Context, in *PeersResponse, opts ...grpc.CallOption) (*PeersResponse, error)
+	Peers(ctx context.Context, in *PeersResponse, opts ...grpc.CallOption) (*PeersResponse, error)
 }
 
 type peersClient struct {
@@ -37,9 +37,9 @@ func NewPeersClient(cc grpc.ClientConnInterface) PeersClient {
 	return &peersClient{cc}
 }
 
-func (c *peersClient) SayHello(ctx context.Context, in *PeersResponse, opts ...grpc.CallOption) (*PeersResponse, error) {
+func (c *peersClient) Peers(ctx context.Context, in *PeersResponse, opts ...grpc.CallOption) (*PeersResponse, error) {
 	out := new(PeersResponse)
-	err := c.cc.Invoke(ctx, Peers_SayHello_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Peers_Peers_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (c *peersClient) SayHello(ctx context.Context, in *PeersResponse, opts ...g
 // All implementations must embed UnimplementedPeersServer
 // for forward compatibility
 type PeersServer interface {
-	SayHello(context.Context, *PeersResponse) (*PeersResponse, error)
+	Peers(context.Context, *PeersResponse) (*PeersResponse, error)
 	mustEmbedUnimplementedPeersServer()
 }
 
@@ -58,8 +58,8 @@ type PeersServer interface {
 type UnimplementedPeersServer struct {
 }
 
-func (UnimplementedPeersServer) SayHello(context.Context, *PeersResponse) (*PeersResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SayHello not implemented")
+func (UnimplementedPeersServer) Peers(context.Context, *PeersResponse) (*PeersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Peers not implemented")
 }
 func (UnimplementedPeersServer) mustEmbedUnimplementedPeersServer() {}
 
@@ -74,20 +74,20 @@ func RegisterPeersServer(s grpc.ServiceRegistrar, srv PeersServer) {
 	s.RegisterService(&Peers_ServiceDesc, srv)
 }
 
-func _Peers_SayHello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Peers_Peers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PeersResponse)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PeersServer).SayHello(ctx, in)
+		return srv.(PeersServer).Peers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Peers_SayHello_FullMethodName,
+		FullMethod: Peers_Peers_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PeersServer).SayHello(ctx, req.(*PeersResponse))
+		return srv.(PeersServer).Peers(ctx, req.(*PeersResponse))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -100,8 +100,98 @@ var Peers_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*PeersServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SayHello",
-			Handler:    _Peers_SayHello_Handler,
+			MethodName: "Peers",
+			Handler:    _Peers_Peers_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "protocols/bridge.proto",
+}
+
+const (
+	RequestService_Request_FullMethodName = "/RequestService/Request"
+)
+
+// RequestServiceClient is the client API for RequestService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type RequestServiceClient interface {
+	Request(ctx context.Context, in *RequestData, opts ...grpc.CallOption) (*ResponseData, error)
+}
+
+type requestServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewRequestServiceClient(cc grpc.ClientConnInterface) RequestServiceClient {
+	return &requestServiceClient{cc}
+}
+
+func (c *requestServiceClient) Request(ctx context.Context, in *RequestData, opts ...grpc.CallOption) (*ResponseData, error) {
+	out := new(ResponseData)
+	err := c.cc.Invoke(ctx, RequestService_Request_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// RequestServiceServer is the server API for RequestService service.
+// All implementations must embed UnimplementedRequestServiceServer
+// for forward compatibility
+type RequestServiceServer interface {
+	Request(context.Context, *RequestData) (*ResponseData, error)
+	mustEmbedUnimplementedRequestServiceServer()
+}
+
+// UnimplementedRequestServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedRequestServiceServer struct {
+}
+
+func (UnimplementedRequestServiceServer) Request(context.Context, *RequestData) (*ResponseData, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Request not implemented")
+}
+func (UnimplementedRequestServiceServer) mustEmbedUnimplementedRequestServiceServer() {}
+
+// UnsafeRequestServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to RequestServiceServer will
+// result in compilation errors.
+type UnsafeRequestServiceServer interface {
+	mustEmbedUnimplementedRequestServiceServer()
+}
+
+func RegisterRequestServiceServer(s grpc.ServiceRegistrar, srv RequestServiceServer) {
+	s.RegisterService(&RequestService_ServiceDesc, srv)
+}
+
+func _RequestService_Request_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RequestServiceServer).Request(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RequestService_Request_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RequestServiceServer).Request(ctx, req.(*RequestData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// RequestService_ServiceDesc is the grpc.ServiceDesc for RequestService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var RequestService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "RequestService",
+	HandlerType: (*RequestServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Request",
+			Handler:    _RequestService_Request_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

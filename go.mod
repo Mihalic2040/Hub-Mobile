@@ -2,7 +2,11 @@ module github.com/Mihalic2040/Hub-Mobile
 
 go 1.20
 
-require github.com/Mihalic2040/Hub v0.0.3
+require (
+	github.com/Mihalic2040/Hub v0.0.4
+	google.golang.org/grpc v1.56.1
+	google.golang.org/protobuf v1.30.0
+)
 
 require (
 	github.com/benbjohnson/clock v1.3.5 // indirect
@@ -48,7 +52,7 @@ require (
 	github.com/libp2p/go-buffer-pool v0.1.0 // indirect
 	github.com/libp2p/go-cidranger v1.1.0 // indirect
 	github.com/libp2p/go-flow-metrics v0.1.0 // indirect
-	github.com/libp2p/go-libp2p v0.28.0 // indirect
+	github.com/libp2p/go-libp2p v0.28.1 // indirect
 	github.com/libp2p/go-libp2p-asn-util v0.3.0 // indirect
 	github.com/libp2p/go-libp2p-core v0.20.1 // indirect
 	github.com/libp2p/go-libp2p-kad-dht v0.23.0 // indirect
@@ -117,7 +121,5 @@ require (
 	golang.org/x/tools v0.9.1 // indirect
 	gonum.org/v1/gonum v0.11.0 // indirect
 	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1 // indirect
-	google.golang.org/grpc v1.56.1 // indirect
-	google.golang.org/protobuf v1.30.0 // indirect
 	lukechampine.com/blake3 v1.2.1 // indirect
 )

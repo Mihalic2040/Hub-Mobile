@@ -4,11 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.Bridge.api.Request;
 import com.Bridge.protocols.PeersResponse;
+import com.Bridge.protocols.RequestData;
+import com.Bridge.protocols.ResponseData;
 import com.Mihalic2040.hub_mobile.service.node;
 
 import com.Bridge.api.Peers;
@@ -58,6 +60,28 @@ public class MainActivity extends AppCompatActivity {
                     PeersResponse res = requestHandler.request();
 
                     runOnUiThread(() -> peersTextView.setText(res.getPeers()));
+
+                    //TEST REQUEST
+
+                    RequestData requestData = RequestData.newBuilder()
+                            .setPeer("12D3KooWGQ4ncdUVMSaVrWrCU1fyM8ZdcVvuWa7MdwqkUu4SSDo4")
+                            .setHandler("MyHandler")
+                            .setUser("example_user")
+                            .setPayload("example_payload")
+                            .build();
+
+                    Request request = new Request();
+
+                    ResponseData response = request.request(requestData);
+
+                    // Process the response
+                    if (response != null) {
+                        System.out.println("Response payload: " + response.getPayload());
+                        System.out.println("Response status: " + response.getStatus());
+                    } else {
+                        System.out.println("Request failed.");
+                    }
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -75,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        testNodeConn();
+        //testNodeConn();
     }
 
     private void stopNodeService() {
