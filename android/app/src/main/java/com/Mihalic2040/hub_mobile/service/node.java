@@ -30,7 +30,6 @@ public class node extends Service {
     private String config = "{\n" +
             "    \"Host\": \"0.0.0.0\",\n" +
             "    \"Port\": \"0\",\n" +
-            "    \"Secret\": \"12121\",\n" +
             "    \"Rendezvous\": \"Hub\",\n" +
             "    \"ProtocolId\": \"/hub/0.0.1\",\n" +
             "    \"Bootstrap\": \"/ip4/141.145.193.111/tcp/6666/p2p/12D3KooWQd1K1k8XA9xVEzSAu7HUCodC7LJB6uW5Kw4VwkRdstPE\"\n" +
@@ -116,7 +115,7 @@ public class node extends Service {
                 // Perform any necessary background tasks here
 
                 try {
-                    Thread.sleep(1000); // Adjust the sleep interval as needed
+                    Thread.sleep(5000); // Adjust the sleep interval as needed
                     service.requestTest();
                 } catch (InterruptedException e) {
                     Log.e(TAG, "Service thread interrupted");

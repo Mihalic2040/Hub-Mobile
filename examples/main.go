@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"time"
 
 	deamon "github.com/Mihalic2040/Hub-Mobile"
@@ -13,15 +14,17 @@ func main() {
   "Host": "0.0.0.0",
   "Port": "0",
   "Rendezvous": "Hub",
-  "DHTServer": true,
+  "DHTServer": false,
   "ProtocolId": "/hub/0.0.1",
-  "Bootstrap": "/ip4/0.0.0.0/tcp/6666/p2p/12D3KooWQd1K1k8XA9xVEzSAu7HUCodC7LJB6uW5Kw4VwkRdstPE"
+  "Bootstrap": "/ip4/141.145.193.111/tcp/6666/p2p/12D3KooWQd1K1k8XA9xVEzSAu7HUCodC7LJB6uW5Kw4VwkRdstPE"
 }`
 
 	service.Config(configJson)
 	service.Start()
 
-	time.Sleep(time.Second * 1)
+	time.Sleep(time.Second * 20)
 
 	service.RequestTest()
+
+	log.Println()
 }
